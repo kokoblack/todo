@@ -51,7 +51,7 @@ const Home = () => {
           mb="2rem"
         >
           <div>
-            <Text color="#609966">Today's {today} </Text>
+            <Text color="#609966">Today&apos;s {today} </Text>
             <Text color="#9DC08B">{day}</Text>
           </div>
           <Spacer />
@@ -85,10 +85,11 @@ const Home = () => {
         <Grid
           templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
           placeItems="center"
-          columnGap='2%'
+          columnGap="2%"
         >
           {[1, 2, 3, 4, 5].map((todo) => (
             <Box
+              key={todo}
               w="100%"
               mt="2%"
               borderLeftRadius={{ base: "8vw", sm: "3rem" }}
