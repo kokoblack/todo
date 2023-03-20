@@ -1,4 +1,4 @@
-import { Flex, Spacer, Box, Text, Grid } from "@chakra-ui/react";
+import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
 import { BsPlusCircleFill, BsThreeDots } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import { useState } from "react";
@@ -13,7 +13,7 @@ const Home = () => {
   });
   const hour = date.getHours();
 
-  const [addTodo, setAddTodos] = useState(false)
+  const [addTodo, setAddTodos] = useState(false);
 
   const checkHour = () => {
     if (hour >= 0 && hour <= 11) {
@@ -114,9 +114,53 @@ const Home = () => {
           ))}
         </Grid>
 
-        <Box position="fixed" bottom="5%" left="50%" ml="-2.5vw" fontSize="5vw" cursor='pointer'>
-          <BsPlusCircleFill />
-        </Box>
+        {!addTodo && (
+          <Box
+            onClick={() => setAddTodos(true)}
+            position="fixed"
+            bottom="5%"
+            left="50%"
+            ml={{base: '-5vw', sm: '-1.5rem'}}
+            fontSize={{base: '10vw', sm: '3rem'}}
+            cursor="pointer"
+          >
+            <BsPlusCircleFill />
+          </Box>
+        )}
+
+        {addTodo && (
+          <Flex
+            justify="center"
+            align="center"
+            gap="2%"
+            position="fixed"
+            bottom="5%"
+            left="50%"
+            w="100%"
+            ml="-50%"
+          >
+            <Input
+              bgColor="#EDF1D6"
+              placeholder="Add Todo"
+              _placeholder={{ color: "#40513B" }}
+              borderColor="#40513B"
+              size={{base: 'sm', sm: 'lg'}}
+              _focus={{border: "none", outline: 'none'}}
+              w={{base: '70%', sm: '50%'}}
+            />
+            <Button
+              onClick={() => setAddTodos(false)}
+              bgColor="#40513B"
+              variant="solid"
+              cursor="pointer"
+              color="#EDF1D6"
+              _hover={{opacity: '0.9'}}
+              size={{base: 'sm', sm: 'lg'}}
+            >
+              Add
+            </Button>
+          </Flex>
+        )}
       </Box>
     </>
   );
