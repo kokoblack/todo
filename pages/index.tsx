@@ -144,7 +144,7 @@ const Home = () => {
               placeholder="Add Todo"
               _placeholder={{ color: "#40513B" }}
               borderColor="#40513B"
-              size={{base: 'sm', sm: 'lg'}}
+              size={{base: 'lg', sm: 'lg'}}
               _focus={{border: "none", outline: 'none'}}
               w={{base: '70%', sm: '50%'}}
             />
@@ -155,7 +155,7 @@ const Home = () => {
               cursor="pointer"
               color="#EDF1D6"
               _hover={{opacity: '0.9'}}
-              size={{base: 'sm', sm: 'lg'}}
+              size={{base: 'lg', sm: 'lg'}}
             >
               Add
             </Button>
