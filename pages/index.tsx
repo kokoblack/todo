@@ -35,14 +35,13 @@ const Home = () => {
         maxW="1440px"
         mx="auto"
       >
-        <Text
+        <Box
           fontSize={{ base: "20vw", sm: "16vw", lg: "10rem" }}
           lineHeight={{ base: "18vw", sm: "13vw", lg: "8rem" }}
           mb="3rem"
         >
-          {" "}
           Good <br /> {checkHour()}
-        </Text>
+        </Box>
         <Flex
           fontSize={{ base: "4vw", sm: "1rem" }}
           align="center"
