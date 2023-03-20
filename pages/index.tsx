@@ -13,7 +13,7 @@ const Home = () => {
   });
   const hour = date.getHours();
 
-  const [color, setColor] = useState<string>("#609966");
+  const [addTodo, setAddTodos] = useState(false)
 
   const checkHour = () => {
     if (hour >= 0 && hour <= 11) {
@@ -93,7 +93,7 @@ const Home = () => {
               mt="2%"
               borderLeftRadius={{ base: "8vw", sm: "3rem" }}
               borderRightRadius={{ base: "8vw", sm: "3rem" }}
-              bgColor={color === "#609966" ? "#9DC08B" : "#609966"}
+              bgColor="#9DC08B"
               p={{ base: "4%", sm: "3%" }}
             >
               <Flex justify="start" align="center" mb="1rem">
@@ -114,7 +114,7 @@ const Home = () => {
           ))}
         </Grid>
 
-        <Box position="fixed" bottom="5%" left="50%" ml="-2.5vw" fontSize="5vw">
+        <Box position="fixed" bottom="5%" left="50%" ml="-2.5vw" fontSize="5vw" cursor='pointer'>
           <BsPlusCircleFill />
         </Box>
       </Box>
