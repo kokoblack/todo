@@ -2,7 +2,7 @@ import { Flex, Box, Text } from "@chakra-ui/react";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { MdDone } from "react-icons/md";
 
-const detailed = () => {
+const Detailed = () => {
   return (
     <Box
       bgColor="#EDF1D6"
@@ -105,4 +105,4 @@ const detailed = () => {
   );
 };
 
-export default detailed;
+export default Detailed;

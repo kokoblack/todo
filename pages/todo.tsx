@@ -2,7 +2,7 @@ import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { useState } from "react";
 
-const todo = () => {
+const Todo = () => {
   const [addTask, setAddTask] = useState(false);
 
   return (
@@ -151,4 +151,4 @@ const todo = () => {
   );
 };
 
-export default todo;
+export default Todo;
