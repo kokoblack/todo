@@ -1,28 +1,35 @@
 import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
 import { BsPlusCircleFill, BsThreeDots } from "react-icons/bs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { CheckDay } from "@/components/CheckDay";
 
 const Home = () => {
-  const date = new Date();
-  const today = date.toLocaleDateString("en-US", { weekday: "long" });
-  const day = date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const hour = date.getHours();
+  type todos = {
+    name: string;
+    active: {
+      name: string;
+      desc: string;
+    }[];
+    done: {
+      name: string;
+      desc: string;
+    }[];
+  }[];
 
+  const [today, day, time] = CheckDay();
   const [addTodo, setAddTodos] = useState(false);
+  const [myTodos, setMyTodos] = useState<todos>([] as todos);
+  const [myTodoName, setMyTodoName] = useState("");
+  console.log(myTodos);
 
-  const checkHour = () => {
-    if (hour >= 0 && hour <= 11) {
-      return "Morning";
-    } else if (hour >= 12 && hour <= 17) {
-      return "Afternoon";
-    } else if (hour >= 18 && hour <= 23) {
-      return "Evening";
+  useEffect(() => {
+    const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
+    if (getTodos === null || myTodos.length !== 0) {
+      localStorage.setItem("myTodos", JSON.stringify(myTodos));
+    } else {
+      setMyTodos(getTodos);
     }
-  };
+  }, [addTodo]);
 
   return (
     <>
@@ -38,9 +45,9 @@ const Home = () => {
           fontSize={{ base: "20vw", sm: "16vw", lg: "10rem" }}
           lineHeight={{ base: "18vw", sm: "13vw", lg: "8rem" }}
           mb="3rem"
-          mt='2rem'
+          mt="2rem"
         >
-          Good <br /> {checkHour()}
+          Good <br /> {time}
         </Box>
         <Flex
           fontSize={{ base: "4vw", sm: "1rem" }}
@@ -75,43 +82,55 @@ const Home = () => {
             borderLeftRadius={{ base: "4vw", sm: "2xl" }}
             borderRightRadius={{ base: "4vw", sm: "2xl" }}
           >
-            5
+            {myTodos.length}
           </Text>
           <Text>Todos</Text>
         </Flex>
 
-        <Grid
-          templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
-          placeItems="center"
-          columnGap="2%"
-        >
-          {[1, 2, 3, 4, 5].map((todo) => (
-            <Box
-              key={todo}
-              w="100%"
-              mt="2%"
-              borderLeftRadius={{ base: "8vw", sm: "3rem" }}
-              borderRightRadius={{ base: "8vw", sm: "3rem" }}
-              bgColor="#9DC08B"
-              p={{ base: "4%", sm: "3%" }}
-            >
-              <Flex justify="start" align="center" mb="1rem">
-                <Box opacity="0.5" fontSize={{ base: "8vw", sm: "3rem" }}>
-                  <BsPlusCircleFill />
-                </Box>
-                <Spacer />
-                <Box fontSize={{ base: "1rem", sm: "1.5rem" }}>
-                  <BsThreeDots />
-                </Box>
-              </Flex>
+        {myTodos.length === 0 ? (
+          <Text
+            textAlign="center"
+            fontSize={{ base: "5vw", sm: "1.2rem" }}
+            lineHeight={{ base: "6vw", sm: "1.2rem" }}
+          >
+            Click on the plus sign below to create your first todo
+          </Text>
+        ) : (
+          <Grid
+            templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
+            placeItems="center"
+            columnGap="2%"
+          >
+            {myTodos.map((todo, id) => (
+              <Box
+                key={id}
+                w="100%"
+                mt="2%"
+                borderLeftRadius={{ base: "8vw", sm: "3rem" }}
+                borderRightRadius={{ base: "8vw", sm: "3rem" }}
+                bgColor="#9DC08B"
+                p={{ base: "4%", sm: "3%" }}
+              >
+                <Flex justify="start" align="center" mb="1rem">
+                  <Box opacity="0.5" fontSize={{ base: "8vw", sm: "3rem" }}>
+                    <BsPlusCircleFill />
+                  </Box>
+                  <Spacer />
+                  <Box fontSize={{ base: "1rem", sm: "1.5rem" }}>
+                    <BsThreeDots />
+                  </Box>
+                </Flex>
 
-              <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
-                2 Active Tasks
-              </Text>
-              <Text fontSize={{ base: "8vw", sm: "3rem" }}>Myself</Text>
-            </Box>
-          ))}
-        </Grid>
+                <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
+                  {todo.active.length === 0
+                    ? "No active task"
+                    : `${todo.active.length} active task`}
+                </Text>
+                <Text fontSize={{ base: "8vw", sm: "3rem" }}>{todo.name}</Text>
+              </Box>
+            ))}
+          </Grid>
+        )}
 
         {!addTodo && (
           <Box
@@ -119,8 +138,8 @@ const Home = () => {
             position="fixed"
             bottom="5%"
             left="50%"
-            ml={{base: '-5vw', sm: '-1.5rem'}}
-            fontSize={{base: '10vw', sm: '3rem'}}
+            ml={{ base: "-5vw", sm: "-1.5rem" }}
+            fontSize={{ base: "10vw", sm: "3rem" }}
             cursor="pointer"
           >
             <BsPlusCircleFill />
@@ -139,22 +158,52 @@ const Home = () => {
             ml="-50%"
           >
             <Input
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === "Enter") {
+                  myTodoName !== ""
+                    ? setMyTodos([
+                        ...myTodos,
+                        {
+                          name: myTodoName,
+                          active: [],
+                          done: [],
+                        },
+                      ])
+                    : null;
+                  setAddTodos(false);
+                }
+              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setMyTodoName(e.target.value)
+              }
               bgColor="#EDF1D6"
               placeholder="Add Todo"
               _placeholder={{ color: "#40513B" }}
               borderColor="#40513B"
-              size={{base: 'lg', sm: 'lg'}}
-              _focus={{border: "none", outline: 'none'}}
-              w={{base: '70%', sm: '50%'}}
+              size={{ base: "lg", sm: "lg" }}
+              _focus={{ border: "none", outline: "none" }}
+              w={{ base: "70%", sm: "50%" }}
             />
             <Button
-              onClick={() => setAddTodos(false)}
+              onClick={() => {
+                myTodoName !== ""
+                  ? setMyTodos([
+                      ...myTodos,
+                      {
+                        name: myTodoName,
+                        active: [],
+                        done: [],
+                      },
+                    ])
+                  : null;
+                setAddTodos(false);
+              }}
               bgColor="#40513B"
               variant="solid"
               cursor="pointer"
               color="#EDF1D6"
-              _hover={{opacity: '0.9'}}
-              size={{base: 'lg', sm: 'lg'}}
+              _hover={{ opacity: "0.9" }}
+              size={{ base: "lg", sm: "lg" }}
             >
               Add
             </Button>
