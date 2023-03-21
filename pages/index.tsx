@@ -1,6 +1,5 @@
 import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
 import { BsPlusCircleFill, BsThreeDots } from "react-icons/bs";
-import { HiOutlinePlusSm } from "react-icons/hi";
 import { useState } from "react";
 
 const Home = () => {
@@ -39,6 +38,7 @@ const Home = () => {
           fontSize={{ base: "20vw", sm: "16vw", lg: "10rem" }}
           lineHeight={{ base: "18vw", sm: "13vw", lg: "8rem" }}
           mb="3rem"
+          mt='2rem'
         >
           Good <br /> {checkHour()}
         </Box>
@@ -61,7 +61,6 @@ const Home = () => {
         </Flex>
 
         <Flex
-          flex="flex"
           justifyContent="start"
           alignItems="center"
           gap="1rem"
