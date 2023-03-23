@@ -1,33 +1,23 @@
 import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
 import { BsPlusCircleFill, BsThreeDots } from "react-icons/bs";
-import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useState, useEffect, useContext } from "react";
 import { CheckDay } from "@/components/CheckDay";
+import { TodoContext } from "@/components/TodoContext";
 
 const Home = () => {
-  type todos = {
-    name: string;
-    active: {
-      name: string;
-      desc: string;
-    }[];
-    done: {
-      name: string;
-      desc: string;
-    }[];
-  }[];
+  const { myTodos, addTodo, setAddTodos, setMyTodos, setActiveTodoIndex } = useContext(TodoContext);
+  console.log(myTodos);
 
   const [today, day, time] = CheckDay();
-  const [addTodo, setAddTodos] = useState(false);
-  const [myTodos, setMyTodos] = useState<todos>([] as todos);
   const [myTodoName, setMyTodoName] = useState("");
-  console.log(myTodos);
 
   useEffect(() => {
     const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
     if (getTodos === null || myTodos.length !== 0) {
       localStorage.setItem("myTodos", JSON.stringify(myTodos));
     } else {
-      setMyTodos(getTodos);
+     setMyTodos(getTodos);
     }
   }, [addTodo]);
 
@@ -111,22 +101,26 @@ const Home = () => {
                 bgColor="#9DC08B"
                 p={{ base: "4%", sm: "3%" }}
               >
-                <Flex justify="start" align="center" mb="1rem">
-                  <Box opacity="0.5" fontSize={{ base: "8vw", sm: "3rem" }}>
-                    <BsPlusCircleFill />
-                  </Box>
-                  <Spacer />
-                  <Box fontSize={{ base: "1rem", sm: "1.5rem" }}>
-                    <BsThreeDots />
-                  </Box>
-                </Flex>
+                <Link onClick={() => setActiveTodoIndex(id)} href="/todo">
+                  <Flex justify="start" align="center" mb="1rem">
+                    <Box opacity="0.5" fontSize={{ base: "8vw", sm: "3rem" }}>
+                      <BsPlusCircleFill />
+                    </Box>
+                    <Spacer />
+                    <Box fontSize={{ base: "1rem", sm: "1.5rem" }}>
+                      <BsThreeDots />
+                    </Box>
+                  </Flex>
 
-                <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
-                  {todo.active.length === 0
-                    ? "No active task"
-                    : `${todo.active.length} active task`}
-                </Text>
-                <Text fontSize={{ base: "8vw", sm: "3rem" }}>{todo.name}</Text>
+                  <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
+                    {todo.active.length === 0
+                      ? "No active task"
+                      : `${todo.active.length} active task`}
+                  </Text>
+                  <Text fontSize={{ base: "8vw", sm: "3rem" }}>
+                    {todo.name}
+                  </Text>
+                </Link>
               </Box>
             ))}
           </Grid>
