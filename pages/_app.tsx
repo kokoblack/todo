@@ -1,11 +1,14 @@
-import type { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
-import '../styles/global.css'
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import "../styles/global.css";
+import { TodoContextProvider } from "@/components/TodoContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider>
-      <Component {...pageProps} />
-    </ChakraProvider>
-  )
+    <TodoContextProvider>
+      <ChakraProvider>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </TodoContextProvider>
+  );
 }

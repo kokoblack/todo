@@ -63,7 +63,7 @@ const Detailed = () => {
           Additional Description
         </Text>
 
-        <Text
+        <Text 
           fontSize={{ base: "5vw", sm: "1.2rem" }}
           lineHeight={{ base: "6vw", sm: "1.2rem" }}
         >
