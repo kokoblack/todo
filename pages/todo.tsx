@@ -1,6 +1,5 @@
-import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
-import { BsPlusCircleFill } from "react-icons/bs";
-import { useState, useContext, useEffect } from "react";
+import { Flex, Spacer, Box, Text, Grid, Input} from "@chakra-ui/react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { TodoContext } from "@/components/TodoContext";
 import Link from "next/link";
 import ActiveTask from "@/components/ActiveTask";
@@ -8,6 +7,7 @@ import Buttons from "@/components/Button";
 import Createtask from "@/components/Createtask";
 import AddButton from "@/components/AddButton";
 import AddNewTodo from "@/components/AddNewTodo";
+import NavigateBack from "@/components/navigateBack";
 
 const Todo = () => {
   const {
@@ -21,6 +21,7 @@ const Todo = () => {
   console.log(myTodos[activeTodoIndex]);
 
   const [taskName, setTaskName] = useState("");
+  // const taskName = useRef('')
 
   const setTodos = () => {
     setMyTodos((prev) => {
@@ -44,10 +45,11 @@ const Todo = () => {
 
   useEffect(() => {
       localStorage.setItem("myTodos", JSON.stringify(myTodos));
-  }, [addTodo]);
+  }, [myTodos]);
 
   return (
     <>
+    {/* <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => ref.current = e.target.value }/> */}
       <Box
         px="4%"
         py="2%"
@@ -56,9 +58,11 @@ const Todo = () => {
         maxW="1440px"
         mx="auto"
       >
+        <NavigateBack page='/'/>
+
         <Text
-          fontSize={{ base: "20vw", sm: "16vw", lg: "10rem" }}
-          lineHeight={{ base: "18vw", sm: "13vw", lg: "8rem" }}
+          fontSize={{ base: "20vw", sm: "15vw", lg: "10rem" }}
+          lineHeight={{ base: "18vw", sm: "13vw", lg: "10rem" }}
           mb="3rem"
           mt="2rem"
         >
@@ -77,13 +81,13 @@ const Todo = () => {
           <Spacer />
 
           <Flex justifyContent="start" alignItems="center" gap="4%">
-            <Buttons children="Active" />
-            <Buttons children="Done" />
+            <Buttons>Active</Buttons>
+            <Buttons>Done</Buttons>
           </Flex>
         </Flex>
 
         {myTodos[activeTodoIndex].active.length === 0 ? (
-          <Createtask children="task" />
+          <Createtask>task</Createtask>
         ) : (
           <Grid
             templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
@@ -122,6 +126,7 @@ const Todo = () => {
             setTodo={setTodos}
             setTodoName={setTaskName}
             name={taskName}
+            dep={addTodo}
           />
         )}
       </Box>

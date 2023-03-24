@@ -33,9 +33,9 @@ const Home = () => {
     if (getTodos === null || myTodos.length !== 0) {
       localStorage.setItem("myTodos", JSON.stringify(myTodos));
     } else {
-      setMyTodos(getTodos);
+      myTodos === getTodos ? null : setMyTodos(getTodos);
     }
-  }, [addTodo]);
+  }, [myTodos]);
 
   return (
     <>
@@ -76,7 +76,7 @@ const Home = () => {
         <ActiveTask num={myTodos.length} />
 
         {myTodos.length === 0 ? (
-          <Createtask children="todos" />
+          <Createtask>todos</Createtask>
         ) : (
           <Grid
             templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
@@ -126,6 +126,7 @@ const Home = () => {
             setTodo={setTodos}
             setTodoName={setMyTodoName}
             name={myTodoName}
+            dep={addTodo}
           />
         )}
       </Box>

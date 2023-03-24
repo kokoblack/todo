@@ -1,9 +1,10 @@
 import { Flex, Box, Text, Textarea } from "@chakra-ui/react";
-import { RiArrowDownSLine } from "react-icons/ri";
+import { BsArrowLeftShort } from "react-icons/bs";
 import { useState, useContext, useEffect, useRef } from "react";
 import { TodoContext } from "@/components/TodoContext";
 import SetAsDone from "@/components/SetAsDone";
 import Done from "@/components/Done";
+import NavigateBack from "@/components/navigateBack";
 
 const Detailed = () => {
   const {
@@ -81,16 +82,7 @@ const Detailed = () => {
         px="2%"
         position="relative"
       >
-        <Box
-          bgColor="#405136"
-          borderRadius="full"
-          p=".5rem"
-          fontSize={{ base: "6vw", sm: "2rem" }}
-          w="max-content"
-          color="#609966"
-        >
-          <RiArrowDownSLine />
-        </Box>
+        <NavigateBack page="/todo"/>
 
         <Text
           fontSize={{ base: "5vw", sm: "1rem" }}
