@@ -1,13 +1,20 @@
 import { Input, Button, Flex } from "@chakra-ui/react";
+import {useRef, useEffect} from 'react'
 
 type AddNewProp = {
   setTodoName: React.Dispatch<React.SetStateAction<string>>;
   setAddTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setTodo: React.Dispatch<React.SetStateAction<void>>;
   name: string;
+  dep: boolean
 };
 
-const AddNewTodo = ({ setTodo, setAddTodo, setTodoName, name }: AddNewProp) => {
+const AddNewTodo = ({ setTodo, setAddTodo, setTodoName, name, dep }: AddNewProp) => {
+  const inputRef = useRef<any>()
+
+  useEffect(() => {
+    inputRef.current.focus()
+  }, [dep])
   return (
     <Flex
       justify="center"
@@ -20,6 +27,7 @@ const AddNewTodo = ({ setTodo, setAddTodo, setTodoName, name }: AddNewProp) => {
       ml="-50%"
     >
       <Input
+      ref={inputRef}
         onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
           if (event.key === "Enter") {
             name !== "" ? setTodo() : null;

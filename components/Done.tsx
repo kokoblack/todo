@@ -7,7 +7,7 @@ const Done = () => {
       bgColor="#405136"
       position="fixed"
       left="55%"
-      ml={{ base: "-40%", sm: "-25%", lg: "-15%" }}
+      ml={{ base: "-45%", sm: "-30%", lg: "-20%" }}
       bottom="5%"
       justify="center"
       align="center"
