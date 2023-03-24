@@ -1,8 +1,69 @@
-import { Flex, Box, Text } from "@chakra-ui/react";
+import { Flex, Box, Text, Textarea } from "@chakra-ui/react";
 import { RiArrowDownSLine } from "react-icons/ri";
-import { MdDone } from "react-icons/md";
+import { useState, useContext, useEffect, useRef } from "react";
+import { TodoContext } from "@/components/TodoContext";
+import SetAsDone from "@/components/SetAsDone";
+import Done from "@/components/Done";
 
 const Detailed = () => {
+  const {
+    myTodos,
+    activeTodoIndex,
+    activeTaskIndex,
+    addTodo,
+    setActiveTaskIndex,
+    setAddTodos,
+    setMyTodos,
+  } = useContext(TodoContext);
+
+  const todoName = myTodos[activeTodoIndex].name;
+  const taskName = myTodos[activeTodoIndex].active[activeTaskIndex].name;
+  const descText = myTodos[activeTodoIndex].active[activeTaskIndex].desc;
+  console.log(myTodos);
+
+  const [val, setVal] = useState(descText);
+  const [done, toggleDone] = useState(false);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null!);
+
+  const resizeTextArea = () => {
+    textAreaRef.current.style.height = "auto";
+    textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
+    console.log(textAreaRef.current.scrollHeight);
+  };
+
+  const UpdateActive = () => {
+    const newObj = myTodos[activeTodoIndex].active.map((obj, ind) => {
+      if (activeTaskIndex === ind) {
+        return { ...obj, desc: val };
+      }
+
+      return obj;
+    });
+
+    return newObj;
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setVal(e.target.value);
+    setMyTodos((prev) => {
+      const newState = prev.map((obj, ind) => {
+        if (activeTodoIndex === ind) {
+          return {
+            ...obj,
+            active: UpdateActive(),
+          };
+        }
+
+        return obj;
+      });
+
+      return newState;
+    });
+    localStorage.setItem("myTodos", JSON.stringify(myTodos));
+  };
+
+  useEffect(resizeTextArea, [val]);
+
   return (
     <Box
       bgColor="#EDF1D6"
@@ -11,6 +72,7 @@ const Detailed = () => {
       w="full"
       h="full"
       maxW="1440px"
+      color="#40513B"
     >
       <Box
         w="full"
@@ -42,7 +104,7 @@ const Detailed = () => {
           w="max-content"
           my="2rem"
         >
-          Myself
+          {todoName}
         </Text>
 
         <Text
@@ -50,7 +112,7 @@ const Detailed = () => {
           lineHeight={{ base: "14vw", sm: "4rem", lg: "5rem" }}
           my="3%"
         >
-          Grocery <br /> Shopping
+          {taskName}
         </Text>
 
         <Text
@@ -63,43 +125,28 @@ const Detailed = () => {
           Additional Description
         </Text>
 
-        <Text 
-          fontSize={{ base: "5vw", sm: "1.2rem" }}
-          lineHeight={{ base: "6vw", sm: "1.2rem" }}
-        >
-          some text kdcnowjmodo pjwfeovowrdovnp pineifnpiefnponv inrvnirirv
-        </Text>
+        <Textarea
+          bgColor="#EDF1D6"
+          placeholder="Click here to add discription"
+          _placeholder={{ color: "#40513B" }}
+          variant="unstyled"
+          w="full"
+          resize="none"
+          rows={1}
+          ref={textAreaRef}
+          value={val}
+          onChange={onChange}
+        />
 
-        <Flex
-          bgColor="#405136"
-          position="fixed"
-          left="50%"
-          ml={{ base: "-40%", sm: "-25%", lg: "-15%" }}
-          bottom="5%"
-          justify="center"
-          align="center"
-          p="2px"
-          w={{ base: "80%", sm: "50%", lg: "30%" }}
-          borderLeftRadius={{ base: "12vw", sm: "3rem" }}
-          borderRightRadius={{ base: "12vw", sm: "3rem" }}
+        <Box h="20vh" />
+
+        <Box
+          onClick={() => {
+            toggleDone((prev) => !prev);
+          }}
         >
-          <Box
-            mr="auto"
-            bgColor="#edf1d6"
-            borderRadius="full"
-            p="1rem"
-            fontSize={{ base: "8vw", sm: "2rem" }}
-          >
-            <MdDone />
-          </Box>
-          <Text
-            mr="auto"
-            color="#609966"
-            fontSize={{ base: "4vw", sm: "1.2rem" }}
-          >
-            Set As Done
-          </Text>
-        </Flex>
+          {!done ? <SetAsDone /> : <Done />}
+        </Box>
       </Box>
     </Box>
   );
