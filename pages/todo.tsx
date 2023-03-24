@@ -7,7 +7,7 @@ import Buttons from "@/components/Button";
 import Createtask from "@/components/Createtask";
 import AddButton from "@/components/AddButton";
 import AddNewTodo from "@/components/AddNewTodo";
-import NavigateBack from "@/components/navigateBack";
+import NavigateBack from "@/components/NavigateBack";
 
 const Todo = () => {
   const {

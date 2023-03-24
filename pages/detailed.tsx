@@ -1,10 +1,9 @@
 import { Flex, Box, Text, Textarea } from "@chakra-ui/react";
-import { BsArrowLeftShort } from "react-icons/bs";
 import { useState, useContext, useEffect, useRef } from "react";
 import { TodoContext } from "@/components/TodoContext";
 import SetAsDone from "@/components/SetAsDone";
 import Done from "@/components/Done";
-import NavigateBack from "@/components/navigateBack";
+import NavigateBack from "@/components/NavigateBack";
 
 const Detailed = () => {
   const {

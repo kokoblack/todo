@@ -35,7 +35,7 @@ const Home = () => {
     } else {
       myTodos === getTodos ? null : setMyTodos(getTodos);
     }
-  }, [myTodos]);
+  }, [myTodos, setMyTodos]);
 
   return (
     <>
