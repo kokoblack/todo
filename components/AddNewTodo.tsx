@@ -41,7 +41,7 @@ const AddNewTodo = ({
           }
         }}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setTodoName(e.target.value)
+          setTodoName(e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase())
         }
         bgColor="#EDF1D6"
         placeholder="Add Todo"

@@ -7,8 +7,9 @@ type ButtonProp = {
 };
 
 const Createtask = ({ children, show }: ButtonProp) => {
+  const checkShow = show
   return (
-    <Box textAlign="center" mt="5%">
+    <Box textAlign="center" mt={{base: '20%', sm: '5%'}}>
       <Text
         fontSize={{ base: "5vw", sm: "1.2rem" }}
         lineHeight={{ base: "6vw", sm: "1.2rem" }}
@@ -16,7 +17,7 @@ const Createtask = ({ children, show }: ButtonProp) => {
       >
         {children}
       </Text>
-      {show && (
+      {checkShow && (
         <Flex
           justify="center"
           align="center"

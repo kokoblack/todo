@@ -6,7 +6,7 @@ export const UpdatelocalStorage = () => {
   useEffect(() => {
     const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
     const getTodosIndex = JSON.parse(localStorage.getItem("TodoIndex") || "{}");
-    if (getTodos === null || myTodos.length !== 0) {
+    if (getTodos.length === 0 || myTodos.length !== 0) {
       localStorage.setItem("myTodos", JSON.stringify(myTodos));
       localStorage.setItem("TodoIndex", JSON.stringify(index));
     } else {

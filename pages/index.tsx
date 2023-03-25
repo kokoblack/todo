@@ -1,39 +1,52 @@
-import { Flex, Spacer, Box, Text, Grid, Input, Button } from "@chakra-ui/react";
-import { BsPlusCircleFill, BsThreeDots } from "react-icons/bs";
+import { Flex, Spacer, Box, Text, Grid } from "@chakra-ui/react";
+import { RiCloseCircleFill, RiAddCircleFill } from "react-icons/ri";
 import Link from "next/link";
-import { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useContext, useEffect } from "react";
 import { CheckDay } from "@/components/CheckDay";
 import { TodoContext } from "@/components/TodoContext";
 import ActiveTask from "@/components/ActiveTask";
 import Createtask from "@/components/Createtask";
 import AddButton from "@/components/AddButton";
 import AddNewTodo from "@/components/AddNewTodo";
-import { useScrollPosition } from "@/components/Scroll";
 import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
 
 const Home = () => {
   const { myTodos, addTodo, index, setIndex, setAddTodos, setMyTodos } =
     useContext(TodoContext);
-  const scroll = useScrollPosition()
-  console.log(myTodos);
-  console.log(scroll)
-  
 
   const [today, day, time] = CheckDay();
   const [myTodoName, setMyTodoName] = useState("");
+  const [delTodoIndex, setDelTodoIndex] = useState<number>()
+  const [effect, toggleEffect] = useState(false)
+
+  const router = useRouter();
 
   const setTodos = () => {
-    setMyTodos([
-      ...myTodos,
-      {
-        name: myTodoName,
-        active: [],
-        done: [],
-      },
-    ]);
+    const name = myTodos.map((e) => e.name);
+    const checkName = name.includes(myTodoName);
+    checkName
+      ? setMyTodos([...myTodos])
+      : setMyTodos([
+          ...myTodos,
+          {
+            name: myTodoName,
+            active: [],
+            done: [],
+          },
+        ]);
   };
 
-  UpdatelocalStorage()
+  useEffect (() => {
+      const newTodo = myTodos.filter((_, id) => {
+        return delTodoIndex !== id
+      });
+      localStorage.setItem('myTodos', JSON.stringify(newTodo))
+      setMyTodos(newTodo);
+    
+  }, [delTodoIndex, effect]);
+
+  UpdatelocalStorage();
 
   return (
     <>
@@ -46,14 +59,13 @@ const Home = () => {
         mx="auto"
       >
         <Box
-          fontSize={{ base: "20vw", sm: "16vw", lg: "10rem" }}
+          fontSize={{ base: "20vw", sm: "14vw", lg: "10rem" }}
           lineHeight={{ base: "18vw", sm: "13vw", lg: "8rem" }}
           mb="3rem"
           mt="2rem"
         >
-          Good <br /> {time}
+          Good {time}
         </Box>
-        {/* {scroll >= 100 && (<Box bgColor='red' fontSize='10rem'>hi</Box>)} */}
         <Flex
           fontSize={{ base: "4vw", sm: "1rem" }}
           align="center"
@@ -75,7 +87,9 @@ const Home = () => {
         <ActiveTask num={myTodos.length} />
 
         {myTodos.length === 0 ? (
-          <Createtask>Click on the plus sign to create your first task</Createtask>
+          <Createtask show={true}>
+            Click on the plus sign to create your first task
+          </Createtask>
         ) : (
           <Grid
             templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
@@ -92,20 +106,36 @@ const Home = () => {
                 bgColor="#9DC08B"
                 p={{ base: "4%", sm: "3%" }}
               >
+                <Flex
+                  fontSize={{ base: "6vw", sm: "2rem" }}
+                  justify="start"
+                  align="center"
+                  mb="1rem"
+                  cursor="pointer"
+                >
+                  <Box
+                    onClick={() => {
+                      setIndex({ ...index, activeTodoIndex: id });
+                      router.push("/todo");
+                      setAddTodos(true);
+                    }}
+                    opacity="0.5"
+                    _hover={{ opacity: "1" }}
+                  >
+                    <RiAddCircleFill />
+                  </Box>
+                  <Spacer />
+                  <Box onClick={() => {
+                      setDelTodoIndex(id);
+                      toggleEffect((prev) => !prev)
+                    }} opacity="0.5" _hover={{ opacity: "1" }}>
+                    <RiCloseCircleFill />
+                  </Box>
+                </Flex>
                 <Link
                   onClick={() => setIndex({ ...index, activeTodoIndex: id })}
                   href="/todo"
                 >
-                  <Flex justify="start" align="center" mb="1rem">
-                    <Box opacity="0.5" fontSize={{ base: "8vw", sm: "3rem" }}>
-                      <BsPlusCircleFill />
-                    </Box>
-                    <Spacer />
-                    <Box fontSize={{ base: "1rem", sm: "1.5rem" }}>
-                      <BsThreeDots />
-                    </Box>
-                  </Flex>
-
                   <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
                     {todo.active.length === 0
                       ? "No active task"
