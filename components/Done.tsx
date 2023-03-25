@@ -15,6 +15,7 @@ const Done = () => {
       w={{ base: "80%", sm: "50%", lg: "30%" }}
       borderLeftRadius={{ base: "12vw", sm: "3rem" }}
       borderRightRadius={{ base: "12vw", sm: "3rem" }}
+      cursor='pointer'
     >
       <Text ml="auto" color="#609966" fontSize={{ base: "4vw", sm: "1.2rem" }}>
         Task Done

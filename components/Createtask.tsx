@@ -3,9 +3,10 @@ import { AiOutlineArrowDown } from "react-icons/ai";
 
 type ButtonProp = {
   children: string;
+  show?: boolean
 };
 
-const Createtask = ({ children }: ButtonProp) => {
+const Createtask = ({ children, show }: ButtonProp) => {
   return (
     <Box textAlign="center" mt="5%">
       <Text
@@ -13,15 +14,17 @@ const Createtask = ({ children }: ButtonProp) => {
         lineHeight={{ base: "6vw", sm: "1.2rem" }}
         mb="5%"
       >
-        Click on the plus sign below to create your first {children}
+        {children}
       </Text>
-      <Flex
-        justify="center"
-        align="center"
-        fontSize={{ base: "5vw", sm: "2rem" }}
-      >
-        <AiOutlineArrowDown />
-      </Flex>
+      {show && (
+        <Flex
+          justify="center"
+          align="center"
+          fontSize={{ base: "5vw", sm: "2rem" }}
+        >
+          <AiOutlineArrowDown />
+        </Flex>
+      )}
     </Box>
   );
 };

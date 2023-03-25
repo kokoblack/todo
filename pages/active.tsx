@@ -1,48 +1,30 @@
-import { Flex, Box, Text, Textarea } from "@chakra-ui/react";
+import {  Box, Text, Textarea } from "@chakra-ui/react";
+import { useRouter } from 'next/navigation';
 import { useState, useContext, useEffect, useRef } from "react";
 import { TodoContext } from "@/components/TodoContext";
 import SetAsDone from "@/components/SetAsDone";
-import Done from "@/components/Done";
 import NavigateBack from "@/components/NavigateBack";
+import { UpdateActive, UpdateDone, delFromActive } from "@/components/UpdateTodos";
+import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
 
 const Detailed = () => {
-  const {
-    myTodos,
-    activeTodoIndex,
-    activeTaskIndex,
-    addTodo,
-    setActiveTaskIndex,
-    setAddTodos,
-    setMyTodos,
-  } = useContext(TodoContext);
-  
-  const [todoName, setTodoName] = useState('');
-  const [taskName, setTaskName] = useState('');
-  const [descText, setDescText] = useState('');
-  const [val, setVal] = useState(descText);
-  const [done, toggleDone] = useState(false);
+  const { myTodos, index, setIndex, setMyTodos } = useContext(TodoContext);
+
+  console.log(index.activeTaskIndex, index.activeTodoIndex);
+
+  const [todoName, setTodoName] = useState("");
+  const [taskName, setTaskName] = useState("");
+  const [descText, setDescText] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null!);
-
-  const UpdateActive = () => {
-    const newObj = myTodos[activeTodoIndex].active.map((obj, ind) => {
-      if (activeTaskIndex === ind) {
-        return { ...obj, desc: val };
-      }
-
-      return obj;
-    });
-
-    return newObj;
-  };
+  const router = useRouter()
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setVal(e.target.value);
     setMyTodos((prev) => {
       const newState = prev.map((obj, ind) => {
-        if (activeTodoIndex === ind) {
+        if (index.activeTodoIndex === ind) {
           return {
             ...obj,
-            active: UpdateActive(),
+            active: UpdateActive(e, myTodos, index),
           };
         }
 
@@ -51,32 +33,29 @@ const Detailed = () => {
 
       return newState;
     });
-    localStorage.setItem("myTodos", JSON.stringify(myTodos));
   };
 
-  useEffect(() => {
-    const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
-    if (getTodos === null || myTodos.length !== 0) {
-      localStorage.setItem("myTodos", JSON.stringify(myTodos));
-    } else {
-      myTodos === getTodos ? null : setMyTodos(getTodos);
-    }
-  }, [myTodos, setMyTodos]);
+  UpdatelocalStorage()
 
   useEffect(() => {
-     if (myTodos.length !== 0) {
-    setTodoName(myTodos[activeTodoIndex].name)
-    setTaskName(myTodos[activeTodoIndex].active[activeTaskIndex].name)
-    setDescText(myTodos[activeTodoIndex].active[activeTaskIndex].desc)
-     }
-  }, [myTodos])
+    if (myTodos.length !== 0) {
+      setTodoName(myTodos[index.activeTodoIndex].name);
+      setTaskName(
+        myTodos[index.activeTodoIndex].active[index.activeTaskIndex]?.name
+      );
+      setDescText(
+        myTodos[index.activeTodoIndex].active[index.activeTaskIndex]?.desc
+      );
+    }
+  }, [myTodos]);
 
   useEffect(() => {
     if (textAreaRef.current !== null) {
       textAreaRef.current.style.height = "auto";
-      textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
+      textAreaRef.current.style.height =
+        textAreaRef.current.scrollHeight + "px";
     }
-  }, [val]);
+  }, [descText]);
 
   return (
     <>
@@ -141,7 +120,10 @@ const Detailed = () => {
               resize="none"
               rows={1}
               ref={textAreaRef}
-              value={val}
+              value={
+                myTodos[index.activeTodoIndex].active[index.activeTaskIndex]
+                  ?.desc
+              }
               onChange={onChange}
             />
 
@@ -149,10 +131,13 @@ const Detailed = () => {
 
             <Box
               onClick={() => {
-                toggleDone((prev) => !prev);
+                  UpdateDone(myTodos, index, setMyTodos);
+                  delFromActive(index, setMyTodos);
+                  router.push('/todo')
               }}
+              cursor="pointer"
             >
-              {!done ? <SetAsDone /> : <Done />}
+              <SetAsDone /> 
             </Box>
           </Box>
         </Box>
