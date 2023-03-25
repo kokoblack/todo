@@ -20,16 +20,24 @@ const Todo = () => {
   const [count, setCount] = useState(0);
   const [checkActive, setCheckActive] = useState(0);
 
+const updateActive = (ele: {name: string, desc: string}[]) => {
+  const name = ele.map((e) => e.name);
+  const checkName = name.includes(taskName);
+  return checkName
+    ? [...ele]
+    : [
+        ...ele,
+        { name: taskName, desc: "" }
+      ];
+}
+  
   const setTodos = () => {
     setMyTodos((prev) => {
       const newState = prev.map((obj, ind) => {
         if (index.activeTodoIndex === ind) {
           return {
             ...obj,
-            active: [
-              ...myTodos[index.activeTodoIndex].active,
-              { name: taskName, desc: "" },
-            ],
+            active: updateActive(myTodos[index.activeTodoIndex].active)
           };
         }
 
@@ -105,7 +113,7 @@ const Todo = () => {
 
           {checkActive === 0 ? (
             isActive ? (
-              <Createtask>
+              <Createtask show={true}>
                 Click on the plus sign to create your first task
               </Createtask>
             ) : (

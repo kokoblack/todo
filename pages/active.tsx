@@ -117,7 +117,6 @@ const Detailed = () => {
               _placeholder={{ color: "#40513B" }}
               variant="unstyled"
               w="full"
-              resize="none"
               rows={1}
               ref={textAreaRef}
               value={

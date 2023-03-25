@@ -6,9 +6,9 @@ type ActivetaskProp = {
 
 const ActiveTask = ({num} : ActivetaskProp) => {
   return (
-    <Flex justifyContent="start" alignItems="center" gap="4%">
+    <Flex justifyContent="start" alignItems="center" gap="2%" w='50%' fontSize={{ base: "6vw", sm: "2rem" }}>
             <Text
-              fontSize={{ base: "6vw", sm: "2rem" }}
+              // fontSize={{ base: "6vw", sm: "2rem" }}
               bgColor="#609966"
               px={{ base: "6vw", sm: "1.5rem" }}
               py={{ base: ".7vw", sm: "0" }}
