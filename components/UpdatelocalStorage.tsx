@@ -15,5 +15,5 @@ export const UpdatelocalStorage = () => {
         setIndex(getTodosIndex);
       }
     }
-  }, [myTodos, setMyTodos]);
+  }, [myTodos, setMyTodos, index, setIndex]);
 };

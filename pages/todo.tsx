@@ -49,7 +49,7 @@ const Todo = () => {
         : myTodos[index.activeTodoIndex].done.length;
       setCheckActive(check);
     }
-  });
+  }, [myTodos, isActive, index.activeTodoIndex]);
 
   return (
     <>
@@ -91,6 +91,7 @@ const Todo = () => {
             <Flex justifyContent="start" alignItems="center" gap="4%">
               {["Active", "Done"].map((e, i) => (
                 <Buttons
+                key={i}
                   setCount={setCount}
                   index={i}
                   setColor={count === i ? "#609969" : "#EDF1D6"}
