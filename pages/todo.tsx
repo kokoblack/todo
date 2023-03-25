@@ -8,28 +8,26 @@ import Createtask from "@/components/Createtask";
 import AddButton from "@/components/AddButton";
 import AddNewTodo from "@/components/AddNewTodo";
 import NavigateBack from "@/components/NavigateBack";
+import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
+import DisplayTasks from "@/components/DisplayTasks";
 
 const Todo = () => {
-  const {
-    myTodos,
-    activeTodoIndex,
-    addTodo,
-    setActiveTaskIndex,
-    setAddTodos,
-    setMyTodos,
-  } = useContext(TodoContext);
-  console.log(myTodos[activeTodoIndex]);
+  const { myTodos, addTodo, index, setIndex, setAddTodos, setMyTodos } =
+    useContext(TodoContext);
 
   const [taskName, setTaskName] = useState("");
+  const [isActive, setIsActive] = useState(true);
+  const [count, setCount] = useState(0);
+  const [checkActive, setCheckActive] = useState(0);
 
   const setTodos = () => {
     setMyTodos((prev) => {
       const newState = prev.map((obj, ind) => {
-        if (activeTodoIndex === ind) {
+        if (index.activeTodoIndex === ind) {
           return {
             ...obj,
             active: [
-              ...myTodos[activeTodoIndex].active,
+              ...myTodos[index.activeTodoIndex].active,
               { name: taskName, desc: "" },
             ],
           };
@@ -42,14 +40,16 @@ const Todo = () => {
     });
   };
 
+  UpdatelocalStorage();
+
   useEffect(() => {
-    const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
-    if (getTodos === null || myTodos.length !== 0) {
-      localStorage.setItem("myTodos", JSON.stringify(myTodos));
-    } else {
-      myTodos === getTodos ? null : setMyTodos(getTodos);
+    if (myTodos.length !== 0) {
+      const check = isActive
+        ? myTodos[index.activeTodoIndex].active.length
+        : myTodos[index.activeTodoIndex].done.length;
+      setCheckActive(check);
     }
-  }, [myTodos, setMyTodos]);
+  });
 
   return (
     <>
@@ -70,7 +70,7 @@ const Todo = () => {
             mb="3rem"
             mt="2rem"
           >
-            {myTodos[activeTodoIndex].name}
+            {myTodos[index.activeTodoIndex].name}
           </Text>
 
           <Flex
@@ -80,48 +80,38 @@ const Todo = () => {
             fontSize={{ base: "7vw", sm: "2rem" }}
             color="#40513B"
           >
-            <ActiveTask num={myTodos[activeTodoIndex].active.length} />
+            {isActive ? (
+              <ActiveTask num={myTodos[index.activeTodoIndex].active.length} />
+            ) : (
+              <ActiveTask num={myTodos[index.activeTodoIndex].done.length} />
+            )}
 
             <Spacer />
 
             <Flex justifyContent="start" alignItems="center" gap="4%">
-              <Buttons>Active</Buttons>
-              <Buttons>Done</Buttons>
+              {["Active", "Done"].map((e, i) => (
+                <Buttons
+                  setCount={setCount}
+                  index={i}
+                  setColor={count === i ? "#609969" : "#EDF1D6"}
+                  toggleActive={setIsActive}
+                >
+                  {e}
+                </Buttons>
+              ))}
             </Flex>
           </Flex>
 
-          {myTodos[activeTodoIndex].active.length === 0 ? (
-            <Createtask>task</Createtask>
+          {checkActive === 0 ? (
+            isActive ? (
+              <Createtask>
+                Click on the plus sign to create your first task
+              </Createtask>
+            ) : (
+              <Createtask show={false}>You have no completed task</Createtask>
+            )
           ) : (
-            <Grid
-              templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
-              placeItems="center"
-              columnGap="2%"
-              mt="1rem"
-            >
-              {myTodos[activeTodoIndex].active.map((todo, id) => (
-                <Box
-                  key={id}
-                  w="100%"
-                  mt="2%"
-                  borderLeftRadius={{ base: "8vw", sm: "2rem" }}
-                  borderRightRadius={{ base: "8vw", sm: "2rem" }}
-                  bgColor="#9DC08B"
-                  p={{ base: "6%", sm: "3%" }}
-                >
-                  <Link onClick={() => setActiveTaskIndex(id)} href="/detailed">
-                    <Text fontSize={{ base: "8vw", sm: "3rem" }}>
-                      {todo.name}
-                    </Text>
-                    <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
-                      {todo.desc === ""
-                        ? "Click to add description"
-                        : todo.desc}
-                    </Text>
-                  </Link>
-                </Box>
-              ))}
-            </Grid>
+            <DisplayTasks checkActive={isActive} />
           )}
 
           {!addTodo && <AddButton setState={setAddTodos} />}

@@ -8,11 +8,16 @@ import ActiveTask from "@/components/ActiveTask";
 import Createtask from "@/components/Createtask";
 import AddButton from "@/components/AddButton";
 import AddNewTodo from "@/components/AddNewTodo";
+import { useScrollPosition } from "@/components/Scroll";
+import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
 
 const Home = () => {
-  const { myTodos, addTodo, setAddTodos, setMyTodos, setActiveTodoIndex } =
+  const { myTodos, addTodo, index, setIndex, setAddTodos, setMyTodos } =
     useContext(TodoContext);
+  const scroll = useScrollPosition()
   console.log(myTodos);
+  console.log(scroll)
+  
 
   const [today, day, time] = CheckDay();
   const [myTodoName, setMyTodoName] = useState("");
@@ -28,14 +33,7 @@ const Home = () => {
     ]);
   };
 
-  useEffect(() => {
-    const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
-    if (getTodos === null || myTodos.length !== 0) {
-      localStorage.setItem("myTodos", JSON.stringify(myTodos));
-    } else {
-      myTodos === getTodos ? null : setMyTodos(getTodos);
-    }
-  }, [myTodos, setMyTodos]);
+  UpdatelocalStorage()
 
   return (
     <>
@@ -55,6 +53,7 @@ const Home = () => {
         >
           Good <br /> {time}
         </Box>
+        {/* {scroll >= 100 && (<Box bgColor='red' fontSize='10rem'>hi</Box>)} */}
         <Flex
           fontSize={{ base: "4vw", sm: "1rem" }}
           align="center"
@@ -76,7 +75,7 @@ const Home = () => {
         <ActiveTask num={myTodos.length} />
 
         {myTodos.length === 0 ? (
-          <Createtask>todos</Createtask>
+          <Createtask>Click on the plus sign to create your first task</Createtask>
         ) : (
           <Grid
             templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
@@ -93,7 +92,10 @@ const Home = () => {
                 bgColor="#9DC08B"
                 p={{ base: "4%", sm: "3%" }}
               >
-                <Link onClick={() => setActiveTodoIndex(id)} href="/todo">
+                <Link
+                  onClick={() => setIndex({ ...index, activeTodoIndex: id })}
+                  href="/todo"
+                >
                   <Flex justify="start" align="center" mb="1rem">
                     <Box opacity="0.5" fontSize={{ base: "8vw", sm: "3rem" }}>
                       <BsPlusCircleFill />
