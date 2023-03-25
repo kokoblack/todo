@@ -47,7 +47,7 @@ const Detailed = () => {
         myTodos[index.activeTodoIndex].active[index.activeTaskIndex]?.desc
       );
     }
-  }, [myTodos]);
+  }, [index.activeTaskIndex, index.activeTodoIndex]);
 
   useEffect(() => {
     if (textAreaRef.current !== null) {

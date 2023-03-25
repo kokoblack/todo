@@ -24,7 +24,7 @@ const Detailed = () => {
         myTodos[index.activeTodoIndex].done[index.activeDoneIndex].desc
       );
     }
-  }, [myTodos]);
+  }, [index.activeTaskIndex, index.activeTodoIndex]);
 
   return (
     <>
