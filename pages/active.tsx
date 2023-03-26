@@ -1,22 +1,20 @@
-import {  Box, Text, Textarea } from "@chakra-ui/react";
-import { useRouter } from 'next/navigation';
+import { Box, Text, Textarea } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useState, useContext, useEffect, useRef } from "react";
 import { TodoContext } from "@/components/TodoContext";
 import SetAsDone from "@/components/SetAsDone";
-import NavigateBack from "@/components/NavigateBack";
 import { UpdateActive, UpdateDone, delFromActive } from "@/components/UpdateTodos";
-import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
+import autosize from "autosize";
+import { NavigateBack, UpdatelocalStorage } from "../components/import";
 
 const Detailed = () => {
-  const { myTodos, index, setIndex, setMyTodos } = useContext(TodoContext);
-
-  console.log(index.activeTaskIndex, index.activeTodoIndex);
+  const { myTodos, index, setMyTodos } = useContext(TodoContext);
 
   const [todoName, setTodoName] = useState("");
   const [taskName, setTaskName] = useState("");
   const [descText, setDescText] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null!);
-  const router = useRouter()
+  const router = useRouter();
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMyTodos((prev) => {
@@ -35,11 +33,11 @@ const Detailed = () => {
     });
   };
 
-  UpdatelocalStorage()
+  UpdatelocalStorage();
 
   useEffect(() => {
     if (myTodos.length !== 0) {
-      setTodoName(myTodos[index.activeTodoIndex].name);
+      setTodoName(myTodos[index.activeTodoIndex]?.name);
       setTaskName(
         myTodos[index.activeTodoIndex].active[index.activeTaskIndex]?.name
       );
@@ -50,12 +48,11 @@ const Detailed = () => {
   }, [index.activeTaskIndex, index.activeTodoIndex]);
 
   useEffect(() => {
-    if (textAreaRef.current !== null) {
-      textAreaRef.current.style.height = "auto";
-      textAreaRef.current.style.height =
-        textAreaRef.current.scrollHeight + "px";
-    }
-  }, [descText]);
+    autosize(textAreaRef.current);
+    return () => {
+      autosize.destroy(textAreaRef.current);
+    };
+  }, [descText, textAreaRef.current]);
 
   return (
     <>
@@ -113,30 +110,33 @@ const Detailed = () => {
 
             <Textarea
               bgColor="#EDF1D6"
+              fontSize={{ base: "5vw", sm: "1rem" }}
               placeholder="Click here to add discription"
               _placeholder={{ color: "#40513B" }}
               variant="unstyled"
               w="full"
               rows={1}
+              transition="none"
               ref={textAreaRef}
               value={
                 myTodos[index.activeTodoIndex].active[index.activeTaskIndex]
                   ?.desc
               }
               onChange={onChange}
+              resize="none"
             />
 
             <Box h="20vh" />
 
             <Box
               onClick={() => {
-                  UpdateDone(myTodos, index, setMyTodos);
-                  delFromActive(index, setMyTodos);
-                  router.push('/todo')
+                UpdateDone(myTodos, index, setMyTodos);
+                delFromActive(index, setMyTodos);
+                router.push("/todo");
               }}
               cursor="pointer"
             >
-              <SetAsDone /> 
+              <SetAsDone />
             </Box>
           </Box>
         </Box>

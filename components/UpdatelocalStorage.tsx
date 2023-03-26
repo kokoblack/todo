@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import { TodoContext } from "@/components/TodoContext";
 
-export const UpdatelocalStorage = () => {
+const UpdatelocalStorage = () => {
   const { myTodos, index, setIndex, setMyTodos } = useContext(TodoContext);
   useEffect(() => {
     const getTodos = JSON.parse(localStorage.getItem("myTodos") || "[]");
@@ -17,3 +17,5 @@ export const UpdatelocalStorage = () => {
     }
   }, [myTodos, setMyTodos, index, setIndex]);
 };
+
+export default UpdatelocalStorage

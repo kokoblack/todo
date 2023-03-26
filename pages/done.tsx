@@ -1,9 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import { useState, useContext, useEffect } from "react";
 import { TodoContext } from "@/components/TodoContext";
-import Done from "@/components/Done";
-import NavigateBack from "@/components/NavigateBack";
-import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
+import { Done, NavigateBack, UpdatelocalStorage } from "../components/import";
 
 const Detailed = () => {
   const { myTodos, index } = useContext(TodoContext);
@@ -12,16 +10,16 @@ const Detailed = () => {
   const [taskName, setTaskName] = useState("");
   const [descText, setDescText] = useState("");
 
-  UpdatelocalStorage()
+  UpdatelocalStorage();
 
   useEffect(() => {
     if (myTodos.length !== 0) {
-      setTodoName(myTodos[index.activeTodoIndex].name);
+      setTodoName(myTodos[index.activeTodoIndex]?.name);
       setTaskName(
-        myTodos[index.activeTodoIndex].done[index.activeDoneIndex].name
+        myTodos[index.activeTodoIndex].done[index.activeDoneIndex]?.name
       );
       setDescText(
-        myTodos[index.activeTodoIndex].done[index.activeDoneIndex].desc
+        myTodos[index.activeTodoIndex].done[index.activeDoneIndex]?.desc
       );
     }
   }, [index.activeTaskIndex, index.activeTodoIndex]);
@@ -79,8 +77,10 @@ const Detailed = () => {
             >
               Additional Description
             </Text>
-            <Text fontSize={{ base: "5vw", sm: "1rem" }}>{descText}</Text>
-            <Done/>
+            <Text fontSize={{ base: "5vw", sm: "1rem" }}>
+              {descText ? descText : "No description"}
+            </Text>
+            <Done />
           </Box>
         </Box>
       )}

@@ -53,7 +53,9 @@ const AddNewTodo = ({
       />
       <Button
         onClick={() => {
-          name !== "" ? setTodo() : null;
+          if (name !== "") {
+            setTodo() 
+          }
           setAddTodo(false);
         }}
         bgColor="#40513B"

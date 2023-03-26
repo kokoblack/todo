@@ -1,18 +1,19 @@
-import { Flex, Spacer, Box, Text, Grid, Input } from "@chakra-ui/react";
-import { useState, useContext, useEffect, useRef } from "react";
+import { Flex, Spacer, Box, Text } from "@chakra-ui/react";
+import { useState, useContext, useEffect } from "react";
 import { TodoContext } from "@/components/TodoContext";
-import Link from "next/link";
-import ActiveTask from "@/components/ActiveTask";
-import Buttons from "@/components/Button";
-import Createtask from "@/components/Createtask";
-import AddButton from "@/components/AddButton";
-import AddNewTodo from "@/components/AddNewTodo";
-import NavigateBack from "@/components/NavigateBack";
-import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
-import DisplayTasks from "@/components/DisplayTasks";
+import {
+  ActiveTask,
+  Buttons,
+  Createtask,
+  AddButton,
+  AddNewTodo,
+  NavigateBack,
+  UpdatelocalStorage,
+  DisplayTasks,
+} from "../components/import";
 
 const Todo = () => {
-  const { myTodos, addTodo, index, setIndex, setAddTodos, setMyTodos } =
+  const { myTodos, addTodo, index, setAddTodos, setMyTodos } =
     useContext(TodoContext);
 
   const [taskName, setTaskName] = useState("");
@@ -20,24 +21,19 @@ const Todo = () => {
   const [count, setCount] = useState(0);
   const [checkActive, setCheckActive] = useState(0);
 
-const updateActive = (ele: {name: string, desc: string}[]) => {
-  const name = ele.map((e) => e.name);
-  const checkName = name.includes(taskName);
-  return checkName
-    ? [...ele]
-    : [
-        ...ele,
-        { name: taskName, desc: "" }
-      ];
-}
-  
+  const updateActive = (ele: { name: string; desc: string }[]) => {
+    const name = ele.map((e) => e.name);
+    const checkName = name.includes(taskName);
+    return checkName ? [...ele] : [...ele, { name: taskName, desc: "" }];
+  };
+
   const setTodos = () => {
     setMyTodos((prev) => {
       const newState = prev.map((obj, ind) => {
         if (index.activeTodoIndex === ind) {
           return {
             ...obj,
-            active: updateActive(myTodos[index.activeTodoIndex].active)
+            active: updateActive(myTodos[index.activeTodoIndex].active),
           };
         }
 
@@ -99,7 +95,7 @@ const updateActive = (ele: {name: string, desc: string}[]) => {
             <Flex justifyContent="start" alignItems="center" gap="4%">
               {["Active", "Done"].map((e, i) => (
                 <Buttons
-                key={i}
+                  key={i}
                   setCount={setCount}
                   index={i}
                   setColor={count === i ? "#609969" : "#EDF1D6"}
