@@ -3,13 +3,15 @@ import { RiCloseCircleFill, RiAddCircleFill } from "react-icons/ri";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useContext, useEffect } from "react";
-import { CheckDay } from "@/components/CheckDay";
 import { TodoContext } from "@/components/TodoContext";
-import ActiveTask from "@/components/ActiveTask";
-import Createtask from "@/components/Createtask";
-import AddButton from "@/components/AddButton";
-import AddNewTodo from "@/components/AddNewTodo";
-import { UpdatelocalStorage } from "@/components/UpdatelocalStorage";
+import {
+  ActiveTask,
+  CheckDay,
+  Createtask,
+  AddButton,
+  AddNewTodo,
+  UpdatelocalStorage,
+} from "../components/import";
 
 const Home = () => {
   const { myTodos, addTodo, index, setIndex, setAddTodos, setMyTodos } =
@@ -17,10 +19,32 @@ const Home = () => {
 
   const [today, day, time] = CheckDay();
   const [myTodoName, setMyTodoName] = useState("");
-  const [delTodoIndex, setDelTodoIndex] = useState<number>()
-  const [effect, toggleEffect] = useState(false)
+  const [delTodoIndex, setDelTodoIndex] = useState<number>();
+  const [effect, toggleEffect] = useState(false);
 
   const router = useRouter();
+
+  const activeCount = myTodos.map((e) => e?.active.length);
+  console.log(activeCount);
+  const doneCount = myTodos.map((e) => e?.done.length);
+  const totalActive =
+    activeCount.length !== 0
+      ? activeCount.reduce(
+          (accumulator, currentValue) => accumulator + currentValue
+        )
+      : 0;
+  const totalDone =
+    doneCount.length !== 0
+      ? doneCount.reduce(
+          (accumulator, currentValue) => accumulator + currentValue
+        )
+      : 0;
+  const totalCount = totalActive + totalDone;
+
+  const taskDone =
+    totalCount === 0 ? 0 : Math.round((totalDone / totalCount) * 100);
+  console.log(totalActive, totalDone);
+  console.log(taskDone);
 
   const setTodos = () => {
     const name = myTodos.map((e) => e.name);
@@ -37,13 +61,18 @@ const Home = () => {
         ]);
   };
 
-  useEffect (() => {
+  useEffect(() => {
+    if (myTodos.length >= 1) {
       const newTodo = myTodos.filter((_, id) => {
-        return delTodoIndex !== id
+        return delTodoIndex !== id;
       });
-      localStorage.setItem('myTodos', JSON.stringify(newTodo))
+
+      if (newTodo.length === 0) {
+        localStorage.setItem("myTodos", JSON.stringify(newTodo));
+      }
+
       setMyTodos(newTodo);
-    
+    }
   }, [delTodoIndex, effect]);
 
   UpdatelocalStorage();
@@ -79,7 +108,7 @@ const Home = () => {
           </div>
           <Spacer />
           <Box textAlign="right">
-            <Text color="#609966">75% done </Text>
+            <Text color="#609966">{taskDone}% Done </Text>
             <Text color="#9DC08B">Completed Tasks</Text>
           </Box>
         </Flex>
@@ -125,10 +154,14 @@ const Home = () => {
                     <RiAddCircleFill />
                   </Box>
                   <Spacer />
-                  <Box onClick={() => {
+                  <Box
+                    onClick={() => {
                       setDelTodoIndex(id);
-                      toggleEffect((prev) => !prev)
-                    }} opacity="0.5" _hover={{ opacity: "1" }}>
+                      toggleEffect((prev) => !prev);
+                    }}
+                    opacity="0.5"
+                    _hover={{ opacity: "1" }}
+                  >
                     <RiCloseCircleFill />
                   </Box>
                 </Flex>

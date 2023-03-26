@@ -12,18 +12,18 @@ type test = {
 }[];
 
 type index = {
-  activeTodoIndex: number
-  activeTaskIndex: number
-  activeDoneIndex: number
-}
+  activeTodoIndex: number;
+  activeTaskIndex: number;
+  activeDoneIndex: number;
+};
 
 type todos = {
   myTodos: test;
-  addTodo: boolean
-  index: index,
+  addTodo: boolean;
+  index: index;
   setIndex: React.Dispatch<React.SetStateAction<index>>;
   setMyTodos: React.Dispatch<React.SetStateAction<test>>;
-  setAddTodos: React.Dispatch<React.SetStateAction<boolean>>
+  setAddTodos: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type TodoContextProviderProp = {
@@ -34,8 +34,8 @@ export const TodoContext = createContext<todos>({} as todos);
 
 export const TodoContextProvider = ({ children }: TodoContextProviderProp) => {
   const [myTodos, setMyTodos] = useState<test>([] as test);
-  const [index, setIndex] = useState<index>({} as index)
-  const [addTodo, setAddTodos] = useState(false)
+  const [index, setIndex] = useState<index>({} as index);
+  const [addTodo, setAddTodos] = useState(false);
 
   return (
     <TodoContext.Provider
@@ -45,7 +45,7 @@ export const TodoContextProvider = ({ children }: TodoContextProviderProp) => {
         index,
         setIndex,
         setMyTodos,
-        setAddTodos
+        setAddTodos,
       }}
     >
       {children}

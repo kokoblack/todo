@@ -1,4 +1,4 @@
-export const CheckDay = () => {
+ const CheckDay = () => {
   const date = new Date();
   const today = date.toLocaleDateString("en-US", { weekday: "long" });
   const day = date.toLocaleDateString("en-US", {
@@ -23,3 +23,5 @@ export const CheckDay = () => {
 
   return [today, day, time];
 };
+
+export default CheckDay

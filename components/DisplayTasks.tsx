@@ -39,7 +39,7 @@ const DisplayTasks = ({ checkActive }: DisplayTaskProps) => {
             href={checkActive ? "/active" : "/done"}
           >
             <Text fontSize={{ base: "8vw", sm: "3rem" }}>{todo.name}</Text>
-            <Text fontSize={{ base: "4vw", sm: "1.2rem" }}>
+            <Text fontSize={{ base: "4vw", sm: "1.2rem" }} noOfLines={1}>
               {checkActive
                 ? todo.desc === ""
                   ? "Click to add description"
